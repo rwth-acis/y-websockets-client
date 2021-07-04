@@ -1,4 +1,4 @@
 [submodule "dist"]
 	path = dist
-	url = https://github.com/y-js/y-websockets-client.git
+	url = https://github.com/rwth-acis/y-websockets-client.git
 	branch = dist
