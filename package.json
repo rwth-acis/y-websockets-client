@@ -8,8 +8,7 @@
     "lint": "./node_modules/.bin/standard"
   },
   "pre-commit": [
-    "lint",
-    "test"
+    "lint"
   ],
   "standard": {
     "parser": "babel-eslint",
