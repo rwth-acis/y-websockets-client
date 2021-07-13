@@ -31,18 +31,9 @@ function extend (Y) {
       var socket = options.socket || io(options.url, options.options)
       this.socket = socket
       var self = this
-      var userJoinedCalled = false
-
-      function Sleep(milliseconds) {
-        return new Promise(resolve => setTimeout(resolve, milliseconds));
-      }
 
       this._onConnect = async function joinRoom () {
         socket.emit('joinRoom', options.room, options.authInfo)
-        while(!userJoinedCalled) {
-            await Sleep(100)
-        }
-        self.userJoined('server', 'master')
       }
 
       socket.on('connect', this._onConnect)
@@ -55,7 +46,7 @@ function extend (Y) {
       this._onYjsEvent = function (message) {
         if (message.type != null) {
           if (message.type === 'userJoined called') {
-            userJoinedCalled = true
+            self.userJoined('server', 'master')
           }
           if (message.type === 'sync done') {
             var userId = socket.id
