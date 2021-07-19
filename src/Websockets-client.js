@@ -32,8 +32,14 @@ function extend (Y) {
       this.socket = socket
       var self = this
 
+      var joined = false
+
       this._onConnect = async function joinRoom () {
         socket.emit('joinRoom', options.room, options.authInfo)
+        if (!options.room.startsWith("projects_")) {
+            joined = true
+            self.userJoined('server', 'master')
+        }
       }
 
       socket.on('connect', this._onConnect)
@@ -46,7 +52,10 @@ function extend (Y) {
       this._onYjsEvent = function (message) {
         if (message.type != null) {
           if (message.type === 'userJoined called') {
-            self.userJoined('server', 'master')
+            if (!joined) {
+                joined = true
+                self.userJoined('server', 'master')
+            }
           }
           if (message.type === 'sync done') {
             var userId = socket.id
@@ -58,7 +67,9 @@ function extend (Y) {
             self.setUserId(userId)
           }
           if (message.room === options.room) {
-            self.receiveMessage('server', message)
+            if (joined) {
+                self.receiveMessage('server', message)
+            }
           }
         }
       }
