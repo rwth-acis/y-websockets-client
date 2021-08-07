@@ -53,22 +53,23 @@ function extend (Y) {
         if (message.type != null) {
           if (message.type === 'userJoined called') {
             if (!joined) {
-                joined = true
-                self.userJoined('server', 'master')
+              joined = true
+              self.userJoined('server', 'master')
             }
-          }
-          if (message.type === 'sync done') {
-            var userId = socket.id
-            if (socket._yjs_connection_counter == null) {
-              socket._yjs_connection_counter = 1
-            } else {
-              userId += socket._yjs_connection_counter++
+          } else {
+            if (message.type === 'sync done') {
+              var userId = socket.id
+              if (socket._yjs_connection_counter == null) {
+                socket._yjs_connection_counter = 1
+              } else {
+                userId += socket._yjs_connection_counter++
+              }
+              self.setUserId(userId)
             }
-            self.setUserId(userId)
-          }
-          if (message.room === options.room) {
-            if (joined) {
+            if (message.room === options.room) {
+              if (joined) {
                 self.receiveMessage('server', message)
+              }
             }
           }
         }
